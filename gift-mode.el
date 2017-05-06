@@ -17,8 +17,12 @@
 (defface gift-question-name '((t (:inherit outline-2)))
   "question name in GIFT quizzes")
 
+(defface gift-latex-math '((t (:inherit font-latex-math-face)))
+  "math notation in GIFT quizzes")
+
 (defvar gift-font-lock-keywords
-  '(("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
+  '(("\\$\\$.*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly
+    ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
     ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
 
 (define-derived-mode gift-mode text-mode "GIFT"
