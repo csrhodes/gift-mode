@@ -6,6 +6,9 @@
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?/ ". 12b" table)
     (modify-syntax-entry ?\n "> b" table)
+    ;; maybe these should be in the font-lock-syntax-table instead?
+    (modify-syntax-entry ?~ "_   " table)
+    (modify-syntax-entry ?\\ "_   " table)
     table))
 
 (defface gift-keyword '((t (:inherit font-lock-keyword-face)))
@@ -20,8 +23,16 @@
 (defface gift-latex-math '((t (:inherit font-latex-math-face)))
   "math notation in GIFT quizzes")
 
+(defface gift-wrong '((t (:foreground "red")))
+  "wrong answers in multiple-choice questions in GIFT quizzes")
+
+(defface gift-right '((t (:foreground "green")))
+  "right answers in multiple-choice questions in GIFT quizzes")
+
 (defvar gift-font-lock-keywords
-  '(("\\$\\$.*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly
+  '(("\\_<=\\(\\([^\\~=}]\\|\\\\[}~=]\\)*\\)" (1 'gift-right))
+    ("\\_<~\\(\\([^\\~=}]\\|\\\\[}~=]\\)*\\)" (1 'gift-wrong))
+    ("\\$\\$.*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly
     ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
     ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
 
