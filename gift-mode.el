@@ -23,15 +23,16 @@
 (defface gift-latex-math '((t (:inherit font-latex-math-face)))
   "math notation in GIFT quizzes")
 
-(defface gift-wrong '((t (:foreground "red")))
+(defface gift-wrong '((t (:inherit org-todo)))
   "wrong answers in multiple-choice questions in GIFT quizzes")
 
-(defface gift-right '((t (:foreground "green")))
+(defface gift-right '((t (:inherit org-done)))
   "right answers in multiple-choice questions in GIFT quizzes")
 
 (defvar gift-font-lock-keywords
   '(("\\_<=\\(\\([^\\~=}]\\|\\\\[}~=]\\)*\\)" (1 'gift-right))
-    ("\\_<~\\(\\([^\\~=}]\\|\\\\[}~=]\\)*\\)" (1 'gift-wrong))
+    ("\\_<~\\(%[0-9.]+%\\)\\(\\([^\\~=%}]\\|\\\\[}~=%]\\)*\\)" (2 'gift-right))
+    ("\\_<~\\(%-[0-9.]+%\\|\\)\\(\\([^\\~=%}]\\|\\\\[}~=%]\\)*\\)" (2 'gift-wrong))
     ("\\$\\$.*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly
     ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
     ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
