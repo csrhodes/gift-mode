@@ -2,6 +2,10 @@
 
 ;; Copyright (C) 2017 Christophe Rhodes <csr21@cantab.net>
 
+;; Author: Christophe Rhodes <christophe@rhodes.io>
+;; URL: https://github.com/csrhodes/gift-mode
+;; Package-Version: 20170509.01
+
 (defconst gift-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?/ ". 12b" table)
@@ -44,6 +48,7 @@
     ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
     ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
 
+;;;###autoload
 (define-derived-mode gift-mode text-mode "GIFT"
   "Major mode for editing GIFT format quizzes.
 \\{gift-mode-map}"
@@ -54,3 +59,9 @@
        "\\(\\$CATEGORY.*\n\\|::[^:]+::\\(.\\|\n\\)\\)")
   (set (make-local-variable 'outline-heading-alist)
        '(("$CATEGORY" . 1) ("::" . 2))))
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.gift\\'" . gift-mode))
+
+(provide 'gift-mode)
+;;; gift-mode.el ends here
