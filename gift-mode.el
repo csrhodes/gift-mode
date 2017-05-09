@@ -29,11 +29,18 @@
 (defface gift-right '((t (:inherit org-done)))
   "right answers in multiple-choice questions in GIFT quizzes")
 
+(defface gift-wrong-credit '((t (:inherit org-scheduled-previously)))
+  "credit for wrong answer in GIFT quizzes")
+
+(defface gift-right-credit '((t (:inherit org-scheduled-today)))
+  "credit for right answer in GIFT quizzes")
+
 (defvar gift-font-lock-keywords
-  '(("\\_<=\\(\\([^\\~=}]\\|\\\\[}~=]\\)*\\)" (1 'gift-right))
-    ("\\_<~\\(%[0-9.]+%\\)\\(\\([^\\~=%}]\\|\\\\[}~=%]\\)*\\)" (2 'gift-right))
-    ("\\_<~\\(%-[0-9.]+%\\|\\)\\(\\([^\\~=%}]\\|\\\\[}~=%]\\)*\\)" (2 'gift-wrong))
-    ("\\$\\$.*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly
+  '(("\\$\\$\\([^$\n]\\|\\\\$\\)*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly; think about font-lock-multiline
+    ("\\_<=\\(\\([^\\~=\n}]\\|\\\\[}~=]\\)*\\)" (1 'gift-right))
+    ("\\_<~\\(%\\([0-9.]+\\)%\\)\\(\\([^\\~=%}\n]\\|\\\\[A-Za-z0-9}~=%]\\)*\\)" (2 'gift-right-credit) (3 'gift-right))
+    ("\\_<~\\(%\\(-[0-9.]+\\)%\\)\\(\\([^\\~=%}\n]\\|\\\\[A-Za-z0-9}~=%]\\)*\\)" (2 'gift-wrong-credit) (3 'gift-wrong))
+    ("\\_<~\\(\\([^\\~=%}\n]\\|\\\\[}~=%]\\)*\\)" (1 'gift-wrong))
     ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
     ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
 
