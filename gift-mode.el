@@ -39,12 +39,21 @@
 (defface gift-right-credit '((t (:inherit org-scheduled-today)))
   "credit for right answer in GIFT quizzes")
 
+;;; FIXME: I'd really like to highlight the background of right/wrong
+;;; answers.  However, the GIFT grammar is more context-sensitive than
+;;; simple font-lock search will let me deal with directly: it seems
+;;; to be valid to use $$foo = bar$$ in the question body, but in the
+;;; answers it needs to be $$foo \= bar$$.  (Only the second variant
+;;; is context-free.)  Supporting both is probably possible with some
+;;; multiline magic; supporting just the escaped version is
+;;; straightforward but might be surprising to users.
 (defvar gift-font-lock-keywords
-  '(("\\$\\$\\([^$\n]\\|\\\\$\\)*[^\\]\\$\\$" . 'gift-latex-math) ; doesn't handle \$$$O(n)$$ correctly; think about font-lock-multiline
+  '(
     ("\\_<=\\(\\([^\\~=\n}]\\|\\\\[}~=]\\)*\\)" (1 'gift-right))
     ("\\_<~\\(%\\([0-9.]+\\)%\\)\\(\\([^\\~=%}\n]\\|\\\\[A-Za-z0-9}~=%]\\)*\\)" (2 'gift-right-credit) (3 'gift-right))
     ("\\_<~\\(%\\(-[0-9.]+\\)%\\)\\(\\([^\\~=%}\n]\\|\\\\[A-Za-z0-9}~=%]\\)*\\)" (2 'gift-wrong-credit) (3 'gift-wrong))
     ("\\_<~\\(\\([^\\~=%}\n]\\|\\\\[}~=%]\\)*\\)" (1 'gift-wrong))
+    ("\\$\\$\\([^$]\\|\\\\$\\)*[^\\]\\$\\$" (0 'gift-latex-math t)) ; doesn't handle \$$$O(n)$$ correctly; think about font-lock-multiline
     ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
     ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
 
