@@ -6,6 +6,10 @@
 ;; URL: https://github.com/csrhodes/gift-mode
 ;; Package-Version: 20170509.01
 
+(require 'font-lock)
+(require 'font-latex)
+(require 'outline)
+
 (defconst gift-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?/ ". 12b" table)
@@ -27,16 +31,16 @@
 (defface gift-latex-math '((t (:inherit font-latex-math-face)))
   "math notation in GIFT quizzes")
 
-(defface gift-wrong '((t (:inherit org-todo)))
+(defface gift-wrong '((t (:inherit error)))
   "wrong answers in multiple-choice questions in GIFT quizzes")
 
-(defface gift-right '((t (:inherit org-done)))
+(defface gift-right '((t (:inherit success)))
   "right answers in multiple-choice questions in GIFT quizzes")
 
-(defface gift-wrong-credit '((t (:inherit org-scheduled-previously)))
+(defface gift-wrong-credit '((t (:inherit gift-wrong :weight normal)))
   "credit for wrong answer in GIFT quizzes")
 
-(defface gift-right-credit '((t (:inherit org-scheduled-today)))
+(defface gift-right-credit '((t (:inherit gift-right :weight normal)))
   "credit for right answer in GIFT quizzes")
 
 (defface gift-feedback '((t (:inherit font-lock-string-face)))
