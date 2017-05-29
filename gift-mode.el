@@ -7,7 +7,7 @@
 ;; Package-Version: 20170509.01
 
 (require 'font-lock)
-(require 'font-latex)
+(require 'tex-mode)
 (require 'outline)
 
 (defconst gift-mode-syntax-table
@@ -28,7 +28,7 @@
 (defface gift-question-name '((t (:inherit outline-2)))
   "question name in GIFT quizzes")
 
-(defface gift-latex-math '((t (:inherit font-latex-math-face)))
+(defface gift-latex-math '((t (:inherit tex-math)))
   "math notation in GIFT quizzes")
 
 (defface gift-wrong '((t (:inherit error)))
