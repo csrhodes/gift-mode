@@ -19,6 +19,10 @@
     (modify-syntax-entry ?\\ "_   " table)
     table))
 
+(defgroup gift nil "Mode for editing GIFT-format quiz questions"
+  :tag "GIFT"
+  :group 'wp)
+
 (defface gift-keyword '((t (:inherit font-lock-keyword-face)))
   "keywords for GIFT quizzes")
 
@@ -69,6 +73,7 @@
 (define-derived-mode gift-mode text-mode "GIFT"
   "Major mode for editing GIFT format quizzes.
 \\{gift-mode-map}"
+  :group 'gift
   :syntax-table gift-mode-syntax-table
   (setq font-lock-defaults (list '(gift-font-lock-keywords) nil))
   (set (make-local-variable 'outline-regexp) "\\(\\$CATEGORY\\|::\\)")
