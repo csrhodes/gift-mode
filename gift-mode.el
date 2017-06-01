@@ -60,14 +60,14 @@
 ;;; straightforward but might be surprising to users.
 (defvar gift-font-lock-keywords
   '(
-    ("\\_<=\\(\\([^\\~=\n}#%]\\|\\\\[}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (1 'gift-right) (4 'gift-feedback nil t))
-    ("{#\\([0-9.:]+\\)" (1 'gift-right))
-    ("\\_<~\\(%\\([0-9.]+\\)%\\)\\(\\([^\\~=%}\n#]\\|\\\\[A-Za-z0-9}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (2 'gift-right-credit) (3 'gift-right) (6 'gift-feedback nil t))
-    ("\\_<~\\(%\\(-[0-9.]+\\)%\\)\\(\\([^\\~=%}\n#]\\|\\\\[A-Za-z0-9}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (2 'gift-wrong-credit) (3 'gift-wrong) (6 'gift-feedback nil t))
-    ("\\_<~\\(\\([^\\~=%}\n#]\\|\\\\[}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (1 'gift-wrong) (4 'gift-feedback nil t))
+    ("\\_<=\\(\\([^\\~=\n}#%]\\|\\\\[}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (1 'gift-right keep) (4 'gift-feedback keep t))
+    ("{#\\([0-9.:]+\\)" (1 'gift-right keep))
+    ("\\_<~\\(%\\([0-9.]+\\)%\\)\\(\\([^\\~=%}\n#]\\|\\\\[A-Za-z0-9}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (2 'gift-right-credit) (3 'gift-right keep) (6 'gift-feedback keep t))
+    ("\\_<~\\(%\\(-[0-9.]+\\)%\\)\\(\\([^\\~=%}\n#]\\|\\\\[A-Za-z0-9}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (2 'gift-wrong-credit) (3 'gift-wrong keep) (6 'gift-feedback keep t))
+    ("\\_<~\\(\\([^\\~=%}\n#]\\|\\\\[}~=#%]\\)*\\)\\(#\\(.*\\)\\)?" (1 'gift-wrong keep) (4 'gift-feedback keep t))
     ("\\$\\$\\([^$]\\|\\\\$\\)*[^\\]\\$\\$" (0 'gift-latex-math t)) ; doesn't handle \$$$O(n)$$ correctly; think about font-lock-multiline
     ("\\(\\$CATEGORY\\):\s-*\\(\\$course\\$/?\\|\\)\\(.*?\\)\\(//\\|$\\)" (1 'gift-keyword) (2 'gift-keyword) (3 'gift-category))
-    ("::\\([^:]\\|\\\\:\\)+::" . 'outline-2)))
+    ("::\\([^:]\\|\\\\:\\)+::" . 'gift-question-name)))
 
 ;;;###autoload
 (define-derived-mode gift-mode text-mode "GIFT"
