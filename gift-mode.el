@@ -9,6 +9,7 @@
 (require 'font-lock)
 (require 'tex-mode)
 (require 'outline)
+(require 'newcomment)
 
 (defconst gift-mode-syntax-table
   (let ((table (make-syntax-table)))
@@ -80,7 +81,8 @@
   (set (make-local-variable 'outline-heading-end-regexp)
        "\\(\\$CATEGORY.*\n\\|::[^:]+::\\(.\\|\n\\)\\)")
   (set (make-local-variable 'outline-heading-alist)
-       '(("$CATEGORY" . 1) ("::" . 2))))
+       '(("$CATEGORY" . 1) ("::" . 2)))
+  (set (make-local-variable 'comment-start) "//"))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gift\\'" . gift-mode))
