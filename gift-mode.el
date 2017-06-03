@@ -4,7 +4,12 @@
 
 ;; Author: Christophe Rhodes <christophe@rhodes.io>
 ;; URL: https://github.com/csrhodes/gift-mode
-;; Package-Version: 20170509.01
+;; Version: 0.1
+
+;;; Commentary:
+;; 
+
+;;; Code:
 
 (require 'font-lock)
 (require 'tex-mode)
