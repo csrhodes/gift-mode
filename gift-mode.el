@@ -126,9 +126,6 @@
 	      (when (and cpos (< cpos (1- (length gift-credit))))
 		(replace-match (elt gift-credit (1+ cpos)) t t nil 1)))))))))
 
-(define-key gift-mode-map (kbd "<C-left>") 'gift-decrease-credit)
-(define-key gift-mode-map (kbd "<C-right>") 'gift-increase-credit)
-
 ;;;###autoload
 (define-derived-mode gift-mode text-mode "GIFT"
   "Major mode for editing GIFT format quizzes.
@@ -142,6 +139,9 @@
   (set (make-local-variable 'outline-heading-alist)
        '(("$CATEGORY" . 1) ("::" . 2)))
   (set (make-local-variable 'comment-start) "//"))
+
+(define-key gift-mode-map (kbd "<C-left>") 'gift-decrease-credit)
+(define-key gift-mode-map (kbd "<C-right>") 'gift-increase-credit)
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gift\\'" . gift-mode))
