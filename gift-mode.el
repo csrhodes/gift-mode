@@ -126,6 +126,7 @@
 	      (when (and cpos (< cpos (1- (length gift-credit))))
 		(replace-match (elt gift-credit (1+ cpos)) t t nil 1)))))))))
 
+(defvar gift-mode-map (make-sparse-keymap))
 (define-key gift-mode-map (kbd "<C-left>") 'gift-decrease-credit)
 (define-key gift-mode-map (kbd "<C-right>") 'gift-increase-credit)
 
