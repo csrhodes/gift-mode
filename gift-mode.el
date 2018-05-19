@@ -13,7 +13,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;; Copyright (C) 2017 Christophe Rhodes <csr21@cantab.net>
+;; Copyright (C) 2017-2018 Christophe Rhodes <christophe@rhodes.io>
 
 ;; Author: Christophe Rhodes <christophe@rhodes.io>
 ;; URL: https://github.com/csrhodes/gift-mode
