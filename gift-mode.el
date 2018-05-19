@@ -29,7 +29,7 @@
 (require 'outline)
 (require 'newcomment)
 
-(defconst gift-mode-syntax-table
+(defvar gift-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?/ ". 12b" table)
     (modify-syntax-entry ?\n "> b" table)
