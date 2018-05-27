@@ -42,6 +42,51 @@
 (require 'outline)
 (require 'newcomment)
 
+
+(defvar gift-imenu-comments-regexp "\\(\\(^\\s-*//.*$\\)\\|\\(^\\s-*$\\)\\)+")
+
+(defvar gift-imenu-question-regexp "^\\(\\([^{}]\\)+\\){" )
+
+(defvar gift-imenu-title-regexp "::\\(.*\\)::" )
+
+
+(defun gift-imenu-log (msg &rest args)
+  "Utility log function, same as message."
+  (when nil
+    (apply #'message msg args)))
+
+(defun gift-imenu-sanitize-title (title)
+  "Cleans a question: empty lines, comments, spaces, extract title."
+  (let*
+      ((nocoments (replace-regexp-in-string gift-imenu-comments-regexp " " (match-string 1) nil 'literal) )
+       (noextrablanks (replace-regexp-in-string "\\(\n\\|\\s-\\)+" " " nocoments nil 'literal) )
+       (trimmed (trim-string noextrablanks)))
+    (if (string-match gift-imenu-title-regexp trimmed)
+        (match-string 1 trimmed)
+      trimmed)))
+  
+
+(defun gift-imenu-index()
+  "Return a table of contents for a gift buffer for use with Imenu."
+  (goto-char (point-min))
+  (let ((retorno)(posicion)(nombre))
+    (setq retorno (list) )
+    (while (< (point) (point-max))
+      (when (re-search-forward gift-imenu-question-regexp nil 1 1)
+           
+        (setq posicion (point))
+        (setq nombre (gift-imenu-sanitize-title (match-string 1)))
+        (when (> (length nombre) 0)
+          (setq entrada ( cons nombre posicion ) )
+          (push entrada retorno))))
+    (reverse retorno)))
+  
+
+(defun gift-imenu-setup ()
+  "Setup the variables to support imenu."
+  (setq imenu-create-index-function 'gift-imenu-index))
+
+
 (defvar gift-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?/ ". 12b" table)
@@ -145,6 +190,7 @@
 \\{gift-mode-map}"
   :group 'gift
   :syntax-table gift-mode-syntax-table
+  (gift-imenu-setup)
   (setq font-lock-defaults (list '(gift-font-lock-keywords) nil))
   (set (make-local-variable 'outline-regexp) "\\(\\$CATEGORY\\|::\\)")
   (set (make-local-variable 'outline-heading-end-regexp)
