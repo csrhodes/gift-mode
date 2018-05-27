@@ -69,16 +69,17 @@
 (defun gift-imenu-index()
   "Return a table of contents for a gift buffer for use with Imenu."
   (goto-char (point-min))
-  (setq retorno (list) )
-  (while (< (point) (point-max))
-    (when (re-search-forward gift-imenu-question-regexp nil 1 1)
+  (let ((retorno)(posicion)(nombre))
+    (setq retorno (list) )
+    (while (< (point) (point-max))
+      (when (re-search-forward gift-imenu-question-regexp nil 1 1)
            
-      (setq posicion (point))
-      (setq nombre (gift-imenu-sanitize-title (match-string 1)))
-      (when (> (length nombre) 0)
-        (setq entrada ( cons nombre posicion ) )
-        (push entrada retorno))))
-  (reverse retorno))
+        (setq posicion (point))
+        (setq nombre (gift-imenu-sanitize-title (match-string 1)))
+        (when (> (length nombre) 0)
+          (setq entrada ( cons nombre posicion ) )
+          (push entrada retorno))))
+    (reverse retorno)))
   
 
 (defun gift-imenu-setup ()
