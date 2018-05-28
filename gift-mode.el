@@ -62,13 +62,8 @@
 
 (defvar
   gift-imenu-title-regexp "::\\(.*\\)::"
-  "Regex than captures the title of a question in group 1.")
+  "Regex than captures the title of a question in group 1. The matched string is already unescaped, so backslash can be ignored.")
 
-
-(defun gift-imenu-log (msg &rest args)
-  "Utility log function, same as (message MSG ARGS)."
-  (when nil
-    (apply #'message msg args)))
 
 (defun gift-imenu-unescape-title (title)
   "Unescape special characters in TITLE, as defined in gift-imenu-escaped-chars."
