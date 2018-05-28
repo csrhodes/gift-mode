@@ -50,7 +50,7 @@
 
 (defvar
   gift-imenu-escaped-chars
-  '("~" "~" "#" "{" "}" ":")
+  '("~" "#" "{" "}" ":")
   "List of special characters in gift format. They are escaped with a backslash (\\).")
 
 (defvar gift-imenu-question-regexp
