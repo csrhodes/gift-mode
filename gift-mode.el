@@ -43,11 +43,26 @@
 (require 'newcomment)
 
 
-(defvar gift-imenu-comments-regexp "\\(\\(^\\s-*//.*$\\)\\|\\(^\\s-*$\\)\\)+")
+(defvar
+  gift-imenu-comments-regexp
+  "\\(\\(^\\s-*//.*$\\)\\|\\(^\\s-*$\\)\\)+"
+  "Regex that captures empty lines and one-line comments in group 1.")
 
-(defvar gift-imenu-question-regexp "^\\(\\([^{}]\\)+\\){" )
+(defvar
+  gift-imenu-escaped-chars
+  '("~" "~" "#" "{" "}" ":")
+  "List of special characters in gift format. They are escaped with a backslash (\\).")
 
-(defvar gift-imenu-title-regexp "::\\(.*\\)::" )
+(defvar gift-imenu-question-regexp
+  (let*
+      ((escaped-chars (mapcar (lambda (arg) (concat "\\(\\\\" arg "\\)" )) gift-imenu-escaped-chars))
+       (regexp (mapconcat 'identity escaped-chars "\\|")))
+    (concat "^\\(\\([^\\\\}]\\|" regexp   "\\)*?\\){" ))
+  "Regex that captures the beginning of a question in group 1, including its comments and title, up to the first bracket ().")
+
+(defvar
+  gift-imenu-title-regexp "::\\(.*\\)::"
+  "Regex than captures the title of a question in group 1.")
 
 
 (defun gift-imenu-log (msg &rest args)
@@ -55,32 +70,41 @@
   (when nil
     (apply #'message msg args)))
 
+(defun gift-imenu-unescape-title (title)
+  "Unescape special characters in TITLE, as defined in gift-imenu-escaped-chars."
+  (dolist (character gift-imenu-escaped-chars)
+    (let*
+        ((regexp (concat "\\\\" character)))
+      (setq title (replace-regexp-in-string regexp character title t t))))
+  title)
+
 (defun gift-imenu-sanitize-title (title)
-  "Cleans a question: empty lines, comments, spaces, extract title."
+  "Cleans a question TITLE: empty lines, comments, spaces, extract title."
   (let*
       ((nocoments (replace-regexp-in-string gift-imenu-comments-regexp " " (match-string 1) nil 'literal) )
        (noextrablanks (replace-regexp-in-string "\\(\n\\|\\s-\\)+" " " nocoments nil 'literal) )
-       (trimmed (trim-string noextrablanks)))
+       (unescaped (gift-imenu-unescape-title noextrablanks))
+       (trimmed (trim-string unescaped)))
     (if (string-match gift-imenu-title-regexp trimmed)
         (match-string 1 trimmed)
       trimmed)))
-  
+
 
 (defun gift-imenu-index()
   "Return a table of contents for a gift buffer for use with Imenu."
   (goto-char (point-min))
-  (let ((retorno)(posicion)(nombre))
-    (setq retorno (list) )
+  (let ((imenu-index)(position)(title-or-question)(entry))
+    (setq imenu-index (list) )
     (while (< (point) (point-max))
       (when (re-search-forward gift-imenu-question-regexp nil 1 1)
-           
-        (setq posicion (point))
-        (setq nombre (gift-imenu-sanitize-title (match-string 1)))
-        (when (> (length nombre) 0)
-          (setq entrada ( cons nombre posicion ) )
-          (push entrada retorno))))
-    (reverse retorno)))
-  
+        
+        (setq position (point))
+        (setq title-or-question (gift-imenu-sanitize-title (match-string 1)))
+        (when (> (length title-or-question) 0)
+          (setq entry ( cons title-or-question position ) )
+          (push entry imenu-index))))
+    (reverse imenu-index)))
+
 
 (defun gift-imenu-setup ()
   "Setup the variables to support imenu."
@@ -153,36 +177,36 @@
   (save-excursion
     (save-match-data
       (let ((bol (save-excursion (beginning-of-line) (point)))
-	    (eol (save-excursion (end-of-line) (point))))
-	(if (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
-	    (let* ((current (match-string 1))
-		   (cpos (position current gift-credit :test 'equal)))
-	      (when (and cpos (> cpos 0))
-		(replace-match (elt gift-credit (1- cpos)) t t nil 1)))
-	  (beginning-of-line)
-	  (when (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
-	    (let* ((current (match-string 1))
-		   (cpos (position current gift-credit :test 'equal)))
-	      (when (and cpos (> cpos 0))
-		(replace-match (elt gift-credit (1- cpos)) t t nil 1)))))))))
+            (eol (save-excursion (end-of-line) (point))))
+        (if (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
+            (let* ((current (match-string 1))
+                   (cpos (position current gift-credit :test 'equal)))
+              (when (and cpos (> cpos 0))
+                (replace-match (elt gift-credit (1- cpos)) t t nil 1)))
+          (beginning-of-line)
+          (when (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
+            (let* ((current (match-string 1))
+                   (cpos (position current gift-credit :test 'equal)))
+              (when (and cpos (> cpos 0))
+                (replace-match (elt gift-credit (1- cpos)) t t nil 1)))))))))
 
 (defun gift-increase-credit ()
   (interactive)
   (save-excursion
     (save-match-data
       (let ((bol (save-excursion (beginning-of-line) (point)))
-	    (eol (save-excursion (end-of-line) (point))))
-	(if (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
-	    (let* ((current (match-string 1))
-		   (cpos (position current gift-credit :test 'equal)))
-	      (when (and cpos (< cpos (1- (length gift-credit))))
-		(replace-match (elt gift-credit (1+ cpos)) t t nil 1)))
-	  (beginning-of-line)
-	  (when (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
-	    (let* ((current (match-string 1))
-		   (cpos (position current gift-credit :test 'equal)))
-	      (when (and cpos (< cpos (1- (length gift-credit))))
-		(replace-match (elt gift-credit (1+ cpos)) t t nil 1)))))))))
+            (eol (save-excursion (end-of-line) (point))))
+        (if (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
+            (let* ((current (match-string 1))
+                   (cpos (position current gift-credit :test 'equal)))
+              (when (and cpos (< cpos (1- (length gift-credit))))
+                (replace-match (elt gift-credit (1+ cpos)) t t nil 1)))
+          (beginning-of-line)
+          (when (search-forward-regexp "~%\\(-?[0-9.]+\\)%" eol t)
+            (let* ((current (match-string 1))
+                   (cpos (position current gift-credit :test 'equal)))
+              (when (and cpos (< cpos (1- (length gift-credit))))
+                (replace-match (elt gift-credit (1+ cpos)) t t nil 1)))))))))
 
 ;;;###autoload
 (define-derived-mode gift-mode text-mode "GIFT"
