@@ -58,7 +58,7 @@
       ((escaped-chars (mapcar (lambda (arg) (concat "\\(\\\\" arg "\\)" )) gift-imenu-escaped-chars))
        (regexp (mapconcat 'identity escaped-chars "\\|")))
     (concat "^\\(\\([^\\\\}]\\|" regexp   "\\)*?\\){" ))
-  "Regex that captures the beginning of a question in group 1, including its comments and title, up to the first bracket ().")
+  "Regex that captures the beginning of a question in group 1, including its comments and title, up to the first bracket ({).")
 
 (defvar
   gift-imenu-title-regexp "::\\(.*\\)::"
