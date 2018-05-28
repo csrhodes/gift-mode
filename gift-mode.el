@@ -66,7 +66,7 @@
 
 
 (defun gift-imenu-log (msg &rest args)
-  "Utility log function, same as message."
+  "Utility log function, same as (message MSG ARGS)."
   (when nil
     (apply #'message msg args)))
 
@@ -90,7 +90,7 @@
       trimmed)))
 
 
-(defun gift-imenu-index()
+(defun gift-imenu-index ()
   "Return a table of contents for a gift buffer for use with Imenu."
   (goto-char (point-min))
   (let ((imenu-index)(position)(title-or-question)(entry))
