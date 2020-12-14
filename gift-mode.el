@@ -79,7 +79,7 @@
       ((nocoments (replace-regexp-in-string gift-imenu-comments-regexp " " (match-string 1) nil 'literal) )
        (noextrablanks (replace-regexp-in-string "\\(\n\\|\\s-\\)+" " " nocoments nil 'literal) )
        (unescaped (gift-imenu-unescape-title noextrablanks))
-       (trimmed (trim-string unescaped)))
+       (trimmed (string-trim unescaped)))
     (if (string-match gift-imenu-title-regexp trimmed)
         (match-string 1 trimmed)
       trimmed)))
